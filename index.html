@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#000000" />
+  <title>For Aisha 🌷</title>
+  <!-- inline guard against any white flash before style.css loads -->
+  <style>html,body{background:#000;}</style>
+  <link rel="preload" as="image" href="X.png" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ============ SECTION 1 · lantern hero ============ -->
+  <section class="hero" id="hero">
+    <img
+      class="hero-img"
+      src="X.png"
+      alt="Two people in a small boat on dark water, reaching toward a glowing lantern beneath a sky filled with hundreds of floating lanterns"
+      decoding="async"
+    />
+    <div class="hero-vignette" aria-hidden="true"></div>
+
+    <!-- glowing lantern hotspots are generated here by script.js -->
+    <div class="lantern-layer" id="lanternLayer" aria-hidden="true"></div>
+
+    <p class="hero-hint">touch the lanterns ✨</p>
+
+    <a class="scroll-cue" href="#tulips" aria-label="Scroll down to the next part">
+      <span class="scroll-cue-text">scroll</span>
+      <span class="scroll-cue-chevron" aria-hidden="true"></span>
+    </a>
+  </section>
+
+  <!-- ============ SECTION 2 · tulips, fireworks, message ============ -->
+  <section class="tulip-scene" id="tulips">
+    <canvas class="fireworks" id="fireworks" aria-hidden="true"></canvas>
+
+    <h1 class="message" id="message" aria-label="To my second tulip, Happy Birthday, Aisha.">
+      <!-- script.js splits each line into letter spans for the reveal -->
+      <span class="message-line" data-line="To my second tulip,"></span>
+      <span class="message-line message-line--big" data-line="Happy Birthday, Aisha."></span>
+    </h1>
+
+    <div class="tulips-wrap">
+      <svg class="tulips" viewBox="0 0 320 340" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+        <defs>
+          <linearGradient id="stemGrad" x1="0" y1="330" x2="0" y2="150" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#2c7a4c" />
+            <stop offset="1" stop-color="#4fba75" />
+          </linearGradient>
+          <linearGradient id="leafGrad" x1="0" y1="1" x2="1" y2="0">
+            <stop offset="0" stop-color="#256b42" />
+            <stop offset="1" stop-color="#4fba75" />
+          </linearGradient>
+          <linearGradient id="petalSide" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0" stop-color="#d63d84" />
+            <stop offset="1" stop-color="#ff8fbd" />
+          </linearGradient>
+          <linearGradient id="petalMain" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0" stop-color="#ff4f9a" />
+            <stop offset="1" stop-color="#ffa9cd" />
+          </linearGradient>
+          <radialGradient id="glowGrad" cx="0.5" cy="0.5" r="0.5">
+            <stop offset="0" stop-color="#ff8fbd" stop-opacity="0.38" />
+            <stop offset="0.6" stop-color="#ff8fbd" stop-opacity="0.14" />
+            <stop offset="1" stop-color="#ff8fbd" stop-opacity="0" />
+          </radialGradient>
+        </defs>
+
+        <!-- soft pink halo behind each bloom -->
+        <ellipse class="bloom-glow" cx="128" cy="118" rx="66" ry="58" fill="url(#glowGrad)" />
+        <ellipse class="bloom-glow" cx="192" cy="118" rx="66" ry="58" fill="url(#glowGrad)" />
+
+        <g class="tulip tulip-left">
+          <path class="stem" pathLength="1" d="M140 330 C136 276 121 214 128 155" />
+          <path class="leaf leaf-a" d="M139 302 C112 291 97 262 101 231 C120 253 132 274 141 297 Z" />
+          <path class="leaf leaf-b" d="M141 318 C159 310 169 291 167 271 C154 287 146 302 140 315 Z" />
+          <g transform="translate(128 155)">
+            <g class="bloom">
+              <path class="petal petal-back" fill="url(#petalSide)" d="M0 2 C-17 -6 -22 -38 -13 -54 C-7 -63 7 -63 13 -54 C22 -38 17 -6 0 2 Z" />
+              <path class="petal petal-l" fill="url(#petalSide)" d="M0 1 C-13 -4 -24 -28 -19 -50 C-16 -60 -7 -57 -5 -46 C-3 -28 -2 -12 0 1 Z" />
+              <path class="petal petal-r" fill="url(#petalSide)" d="M0 1 C13 -4 24 -28 19 -50 C16 -60 7 -57 5 -46 C3 -28 2 -12 0 1 Z" />
+              <path class="petal petal-front" fill="url(#petalMain)" d="M0 2 C-11 -8 -13 -35 -7 -51 C-3 -59 3 -59 7 -51 C13 -35 11 -8 0 2 Z" />
+            </g>
+          </g>
+        </g>
+
+        <g class="tulip tulip-right">
+          <path class="stem" pathLength="1" d="M180 330 C184 276 199 214 192 155" />
+          <path class="leaf leaf-b" d="M181 302 C208 291 223 262 219 231 C200 253 188 274 179 297 Z" />
+          <path class="leaf leaf-a" d="M179 318 C161 310 151 291 153 271 C166 287 174 302 180 315 Z" />
+          <g transform="translate(192 155)">
+            <g class="bloom">
+              <path class="petal petal-back" fill="url(#petalSide)" d="M0 2 C-17 -6 -22 -38 -13 -54 C-7 -63 7 -63 13 -54 C22 -38 17 -6 0 2 Z" />
+              <path class="petal petal-l" fill="url(#petalSide)" d="M0 1 C-13 -4 -24 -28 -19 -50 C-16 -60 -7 -57 -5 -46 C-3 -28 -2 -12 0 1 Z" />
+              <path class="petal petal-r" fill="url(#petalSide)" d="M0 1 C13 -4 24 -28 19 -50 C16 -60 7 -57 5 -46 C3 -28 2 -12 0 1 Z" />
+              <path class="petal petal-front" fill="url(#petalMain)" d="M0 2 C-11 -8 -13 -35 -7 -51 C-3 -59 3 -59 7 -51 C13 -35 11 -8 0 2 Z" />
+            </g>
+          </g>
+        </g>
+      </svg>
+    </div>
+  </section>
+
+  <!-- graceful fallback if JavaScript is disabled: show the finished scene -->
+  <noscript>
+    <style>
+      .message-line::after { content: attr(data-line); }
+      .message-line { opacity: 1 !important; }
+      .stem { stroke-dashoffset: 0 !important; }
+      .leaf, .bloom { transform: scale(1) !important; }
+      .bloom-glow { opacity: 1 !important; }
+      .hero-hint { display: none; }
+    </style>
+  </noscript>
+
+  <script src="script.js"></script>
+</body>
+</html>
