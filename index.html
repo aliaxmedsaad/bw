@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#000000" />
+  <title>For Aisha 🌷</title>
+  <!-- inline guard against any white flash before style.css loads -->
+  <style>html,body{background:#000;}</style>
+  <link rel="preload" as="image" href="./X.png" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+
+  <!-- ============ SECTION 1 · lantern hero ============ -->
+  <section class="hero" id="hero">
+    <img
+      class="hero-img"
+      src="./X.png"
+      alt="Two people in a small boat on dark water, reaching toward a glowing lantern beneath a sky filled with hundreds of floating lanterns"
+      decoding="async"
+    />
+    <div class="hero-vignette" aria-hidden="true"></div>
+
+    <!-- glowing lantern hotspots are generated here by script.js -->
+    <div class="lantern-layer" id="lanternLayer" aria-hidden="true"></div>
+
+    <p class="hero-hint">touch the lanterns ✨</p>
+
+    <a class="scroll-cue" href="#tulips" aria-label="Scroll down to the next part">
+      <span class="scroll-cue-text">scroll</span>
+      <span class="scroll-cue-chevron" aria-hidden="true"></span>
+    </a>
+  </section>
+
+  <!-- ============ SECTION 2 · tulips, fireworks, message ============ -->
+  <section class="tulip-scene" id="tulips">
+    <canvas class="fireworks" id="fireworks" aria-hidden="true"></canvas>
+
+    <h1 class="message" id="message" aria-label="To my second tulip, Happy Birthday, Aisha.">
+      <!-- script.js splits each line into letter spans for the reveal -->
+      <span class="message-line" data-line="To my second tulip,"></span>
+      <span class="message-line message-line--big" data-line="Happy Birthday, Aisha."></span>
+    </h1>
+
+    <!-- real tulip photos, revealed by the .grow class (script.js) -->
+    <div class="tulips-wrap" aria-hidden="true">
+      <div class="tulip-halo"></div>
+      <img
+        class="tulip-photo tulip-photo--solo"
+        src="./T.jpg"
+        alt=""
+        loading="lazy"
+        decoding="async"
+      />
+      <img
+        class="tulip-photo tulip-photo--field"
+        src="./TT.jpg"
+        alt=""
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+  </section>
+
+  <!-- graceful fallback if JavaScript is disabled: show the finished scene -->
+  <noscript>
+    <style>
+      .message-line::after { content: attr(data-line); }
+      .message-line { opacity: 1 !important; }
+      .tulip-photo { opacity: 1 !important; transform: translateX(-50%) !important; }
+      .tulip-halo { opacity: 1 !important; }
+      .hero-hint { display: none; }
+    </style>
+  </noscript>
+
+  <script src="./script.js"></script>
+</body>
+</html>

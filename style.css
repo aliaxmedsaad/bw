@@ -1,0 +1,374 @@
+/* ==========================================================
+   For Aisha 🌷 — cinematic two-scene birthday site
+   Scene 1: lantern boat hero with touch-reactive glows
+   Scene 2: real tulip photos reveal → starburst fireworks → message
+   No external fonts, no libraries — everything local.
+   ========================================================== */
+
+:root {
+  --black: #000;
+  --gold: #ffd27a;
+  --soft-pink: #ff8fbd;
+  --deep-pink: #ff4f9a;
+  --leaf: #4fba75;
+  --ink: #f7ecdf;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--black);
+  color-scheme: dark;
+  scroll-behavior: smooth;
+  scroll-snap-type: y proximity;
+  overscroll-behavior: none;
+}
+
+body {
+  background: var(--black);
+  color: var(--ink);
+  font-family: 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, 'Times New Roman', serif;
+  overflow-x: hidden;
+}
+
+section {
+  scroll-snap-align: start;
+}
+
+/* ============ SECTION 1 · lantern hero ============ */
+
+.hero {
+  position: relative;
+  height: 100svh;
+  overflow: hidden;
+  background: var(--black);
+  /* keep native vertical scrolling while pointer events feed the glows */
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.hero-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 45%; /* mirrored in layoutLanterns() in script.js */
+  -webkit-user-drag: none;
+}
+
+/* keep the boat in frame when wide screens crop the portrait image */
+@media (min-aspect-ratio: 5/4) {
+  .hero-img {
+    object-position: center 62%;
+  }
+}
+
+/* cinematic vignette so glows and text sit comfortably on the image */
+.hero-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 90% at 50% 45%, transparent 55%, rgba(0, 0, 0, 0.55) 100%),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.35), transparent 18%, transparent 68%, rgba(0, 0, 0, 0.65));
+}
+
+/* --- touch-reactive lantern glows (elements created by script.js) --- */
+
+.lantern-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.lantern {
+  --boost: 0;
+  --size: 84px;
+  position: absolute;
+  width: var(--size);
+  height: var(--size);
+  /* left/top are set in px by script.js (image-space hotspot mapping);
+     --boost (0..1) is driven by pointer proximity */
+  transform: translate(-50%, -50%) scale(calc(1 + var(--boost) * 0.75));
+  opacity: calc(0.55 + var(--boost) * 0.45);
+  will-change: transform, opacity;
+}
+
+.lantern-glow {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(
+    closest-side,
+    rgba(255, 214, 140, 0.6),
+    rgba(255, 180, 90, 0.22) 46%,
+    rgba(255, 160, 70, 0) 72%
+  );
+  animation: lanternPulse 3.6s ease-in-out infinite alternate;
+}
+
+/* hot white-gold core that appears as the finger gets close */
+.lantern::after {
+  content: '';
+  position: absolute;
+  inset: 22%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(255, 246, 215, 1), rgba(255, 242, 205, 0) 72%);
+  opacity: var(--boost);
+}
+
+@keyframes lanternPulse {
+  from { transform: scale(0.92); opacity: 0.75; }
+  to   { transform: scale(1.1);  opacity: 1; }
+}
+
+/* --- hint + scroll cue --- */
+
+.hero-hint {
+  position: absolute;
+  left: 50%;
+  bottom: calc(64px + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-style: italic;
+  font-size: clamp(0.85rem, 3.5vw, 1rem);
+  letter-spacing: 0.12em;
+  color: rgba(255, 226, 178, 0.85);
+  text-shadow: 0 0 12px rgba(255, 190, 110, 0.45);
+  opacity: 0;
+  animation: fadeIn 2s ease 1.2s forwards;
+  pointer-events: none;
+}
+
+.scroll-cue {
+  position: absolute;
+  left: 50%;
+  bottom: calc(14px + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  text-decoration: none;
+  color: rgba(255, 235, 200, 0.7);
+  font-size: 0.7rem;
+  letter-spacing: 0.35em;
+  text-indent: 0.35em; /* visually recenter the letter-spaced word */
+  opacity: 0;
+  animation: fadeIn 2s ease 2.2s forwards;
+}
+
+.scroll-cue-chevron {
+  width: 10px;
+  height: 10px;
+  border-right: 1.5px solid rgba(255, 220, 160, 0.85);
+  border-bottom: 1.5px solid rgba(255, 220, 160, 0.85);
+  filter: drop-shadow(0 0 6px rgba(255, 200, 120, 0.6));
+  animation: bob 1.8s ease-in-out infinite;
+}
+
+@keyframes bob {
+  0%, 100% { transform: rotate(45deg) translate(0, 0); }
+  50%      { transform: rotate(45deg) translate(3px, 3px); }
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+/* ============ SECTION 2 · tulips + fireworks + message ============ */
+
+.tulip-scene {
+  position: relative;
+  min-height: 100svh;
+  overflow: hidden;
+  background: var(--black);
+}
+
+.fireworks {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1; /* behind tulips and message */
+}
+
+/* --- birthday message --- */
+
+.message {
+  position: absolute;
+  z-index: 3;
+  top: 13svh;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(92vw, 560px);
+  text-align: center;
+  font-weight: 400;
+}
+
+.message-line {
+  display: block;
+  color: #ffd9e8;
+  font-style: italic;
+  font-size: clamp(1.15rem, 5.4vw, 1.6rem);
+  letter-spacing: 0.06em;
+  margin-bottom: 0.5em;
+  text-shadow: 0 0 14px rgba(255, 143, 189, 0.4);
+}
+
+.message-line--big {
+  color: #ffe9f2;
+  font-style: normal;
+  font-size: clamp(1.5rem, 7vw, 2.6rem);
+  letter-spacing: 0.04em;
+  line-height: 1.25;
+  margin-bottom: 0;
+  text-shadow:
+    0 0 18px rgba(255, 143, 189, 0.55),
+    0 0 42px rgba(255, 210, 122, 0.35);
+}
+
+/* letters are injected by script.js; each fades in with its own delay */
+.char {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.45em);
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.message.show .char {
+  opacity: 1;
+  transform: none;
+}
+
+/* --- tulips (real photos: T.jpg solo tulip + TT.jpg tulip field) --- */
+
+.tulips-wrap {
+  position: absolute;
+  z-index: 2;
+  bottom: 4svh;
+  left: 50%;
+  transform: translateX(-50%);
+  /* 30% larger than the previous min(74vw, 330px) SVG tulips */
+  width: min(96vw, 429px);
+  height: min(58svh, 500px);
+  pointer-events: none;
+}
+
+@media (max-height: 560px) {
+  .message { top: 7svh; }
+  .tulips-wrap {
+    width: min(65vh, 312px); /* 30% larger than the old min(50vh, 240px) */
+    height: min(62svh, 420px);
+  }
+}
+
+/* soft pink halo behind the photos */
+.tulip-halo {
+  position: absolute;
+  z-index: 1;
+  inset: -6% -14%;
+  background: radial-gradient(
+    ellipse 52% 46% at 50% 56%,
+    rgba(255, 143, 189, 0.30),
+    rgba(255, 143, 189, 0.10) 55%,
+    rgba(255, 143, 189, 0) 78%
+  );
+  opacity: 0;
+}
+
+/* resting (pre-animation) state — hidden in the dark; masks fade each
+   photo's rectangular edge into pure black so the JPGs sit seamlessly
+   on the cinematic background */
+.tulip-photo {
+  position: absolute;
+  left: 50%;
+  object-fit: cover;
+  opacity: 0;
+  transform: translateX(-50%) translateY(34px) scale(0.92);
+  will-change: transform, opacity;
+}
+
+/* T.jpg — the single tulip ("my second tulip"), rising behind the field.
+   Its light studio background is tamed by a tight elliptical mask plus a
+   dim/warm filter, leaving a faint moonlit halo around the bloom. */
+.tulip-photo--solo {
+  z-index: 2;
+  bottom: 26%;
+  width: 58%;
+  height: 74%;
+  object-position: center 42%;
+  filter: brightness(0.62) contrast(1.12) saturate(1.35) sepia(0.14);
+  -webkit-mask-image: radial-gradient(ellipse 46% 52% at 50% 44%, #000 26%, transparent 68%);
+  mask-image: radial-gradient(ellipse 46% 52% at 50% 44%, #000 26%, transparent 68%);
+}
+
+/* TT.jpg — the pink tulip bed anchoring the bottom of the scene */
+.tulip-photo--field {
+  z-index: 3;
+  bottom: 0;
+  width: 100%;
+  height: 52%;
+  object-position: center 30%;
+  filter: brightness(0.88) saturate(1.05);
+  -webkit-mask-image: radial-gradient(ellipse 60% 56% at 50% 52%, #000 36%, transparent 76%);
+  mask-image: radial-gradient(ellipse 60% 56% at 50% 52%, #000 36%, transparent 76%);
+}
+
+/* reveal sequence — triggered when .grow lands on the section
+   (IntersectionObserver in script.js). Field first, then the solo
+   tulip drifts up behind it, then the halo settles in.
+   Ends at 5.4s; TULIP_TOTAL_MS in script.js gates fireworks at 6s. */
+
+.grow .tulip-photo--field {
+  animation: tulipReveal 2.4s cubic-bezier(0.22, 0.9, 0.3, 1) 0.3s both;
+}
+.grow .tulip-photo--solo {
+  animation: tulipReveal 2.6s cubic-bezier(0.22, 0.9, 0.3, 1) 1.4s both;
+}
+
+@keyframes tulipReveal {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(34px) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+}
+
+.grow .tulip-halo {
+  animation:
+    glowIn 1.6s ease 3.8s both,
+    glowPulse 5.5s ease-in-out 6.3s infinite alternate;
+}
+@keyframes glowIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes glowPulse {
+  from { opacity: 1; }
+  to   { opacity: 0.55; }
+}
+
+/* ============ reduced motion ============ */
+/* collapse every animation/transition to its finished state */
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+}
